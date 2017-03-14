@@ -8,7 +8,8 @@ class ImageFeatures:
                  color_space='RGB', 
                  bin_size=(32,32), 
                  hist_bins=32, 
-                 hist_bin_range=(0,32), 
+                 hist_bin_range=(0,32),
+                 hog_channel=3,
                  hog_orient=9, 
                  hog_pix_per_cell=8, 
                  hog_cell_per_block=2):
@@ -16,6 +17,7 @@ class ImageFeatures:
         self.bin_size = bin_size
         self.hist_bins = hist_bins
         self.hist_bin_range = hist_bin_range
+        self.hog_channel=hog_channel
         self.hog_orient = hog_orient
         self.hog_pix_per_cell = hog_pix_per_cell
         self.hog_cell_per_block = hog_cell_per_block
@@ -33,10 +35,17 @@ class ImageFeatures:
             return cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
         else:
             return np.copy(img)
-        
+
+    def getChannel(self, img):
+        feature_image = self.convert_image(img)
+        if self.hog_channel < 3:
+            return feature_image[:, :, self.hog_channel]
+        else:
+            return cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+
     def bin_spatial(self, img):
         features = cv2.resize(img, self.bin_size).ravel()
-        
+
         # Return the feature vector
         return features
 
@@ -53,7 +62,7 @@ class ImageFeatures:
 
     # Define a function to return HOG features and visualization
     def get_hog_features(self, img, vis=False):
-        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        gray = self.getChannel(img)
         # Call with two outputs if vis==True
         if vis == True:
             features, hog_image = hog(gray, orientations=self.hog_orient, pixels_per_cell=(self.hog_pix_per_cell, self.hog_pix_per_cell),

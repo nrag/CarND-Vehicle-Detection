@@ -21,38 +21,41 @@ def get_best_parameters():
     best_params = {}
     best_classifier = None
 
-    with tqdm(total=7776) as pbar:
-        for cspace in ['RGB', 'HSV', 'LUV', 'HLS', 'YUV', 'YCrCb']:
-            for bin_size in [(8,8), (16,16), (32,32)]:
-                for hist_bins in [8, 16, 32]:
-                    for hist_bin_range in [8, 16, 32]:
-                        for hog_orient in [9, 10, 11, 12]:
-                            for hog_pix_per_cell in [4, 6, 8, 10]:
-                                for hog_cell_per_block in [2, 4, 6]:
-                                    featurizer = ImageFeatures(color_space=cspace, 
-                                                     bin_size=bin_size, 
-                                                     hist_bins=hist_bins, 
-                                                     hist_bin_range=(0,hist_bin_range), 
-                                                     hog_orient=hog_orient, 
-                                                     hog_pix_per_cell=hog_pix_per_cell, 
-                                                     hog_cell_per_block=hog_cell_per_block)
-                                    car_features = featurizer.featurize(car_images)
-                                    noncar_features = featurizer.featurize(noncar_images)
-                                    classifier = VehicleClassifier(car_features, noncar_features)
-                                    score = classifier.fit()
-                                    if (score > best_score):
-                                        print('Classification accuracy improved to: ', score)
-                                        best_score = score
-                                        best_classifier = classifier
-                                        best_params['cspace'] = cspace
-                                        best_params['bin_size'] = bin_size
-                                        best_params['hist_bins'] = hist_bins
-                                        best_params['hist_bin_range'] = hist_bin_range
-                                        best_params['hog_orient'] = hog_orient
-                                        best_params['hog_pix_per_cell'] = hog_pix_per_cell
-                                        best_params['hog_cell_per_block'] = hog_cell_per_block
-                                    
-                                    pbar.update(1)
+    bin_size = (32, 32)
+    hist_bins = 32 
+    hist_bin_range = 32
+    with tqdm(total=1350) as pbar:
+        for cspace in ['HSV', 'LUV', 'HLS', 'YUV', 'YCrCb', 'RGB']:
+            for hog_channel in [0, 1, 2, 3]:
+                for hog_orient in [6, 9, 10, 11, 12]:
+                    for hog_pix_per_cell in [4, 6, 8, 10, 16]:
+                        for hog_cell_per_block in [1, 2, 3]:
+                            featurizer = ImageFeatures(color_space=cspace, 
+                                             bin_size=bin_size, 
+                                             hist_bins=hist_bins, 
+                                             hist_bin_range=(0,hist_bin_range), 
+                                             hog_channel=hog_channel,
+                                             hog_orient=hog_orient, 
+                                             hog_pix_per_cell=hog_pix_per_cell, 
+                                             hog_cell_per_block=hog_cell_per_block)
+                            car_features = featurizer.featurize(car_images)
+                            noncar_features = featurizer.featurize(noncar_images)
+                            classifier = VehicleClassifier(car_features, noncar_features)
+                            score = classifier.fit()
+                            if (score > best_score):
+                                print('Classification accuracy improved to: ', score)
+                                best_score = score
+                                best_classifier = classifier
+                                best_params['cspace'] = cspace
+                                best_params['bin_size'] = bin_size
+                                best_params['hist_bins'] = hist_bins
+                                best_params['hist_bin_range'] = hist_bin_range
+                                best_params['hog_channel'] = hog_channel
+                                best_params['hog_orient'] = hog_orient
+                                best_params['hog_pix_per_cell'] = hog_pix_per_cell
+                                best_params['hog_cell_per_block'] = hog_cell_per_block
+                            
+                            pbar.update(1)
 
     print('Best accuracy = ', best_accuracy)
     f = open('best_params.p', 'wb')
