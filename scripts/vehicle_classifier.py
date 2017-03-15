@@ -10,7 +10,7 @@ class VehicleClassifier:
         # Create an array stack of feature vectors
         X = np.vstack((car_features, noncar_features)).astype(np.float64)                        
         # Fit a per-column scaler
-        X_scaler = StandardScaler().fit(X)
+        self.X_scaler = StandardScaler(copy=False).fit(X)
         self.scaled_X = X_scaler.transform(X)
         self.y = np.hstack((np.ones(len(car_features)), np.zeros(len(noncar_features))))
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.scaled_X, self.y, test_size=0.2, random_state=rand_state)
@@ -21,6 +21,7 @@ class VehicleClassifier:
         return round(self.svc.score(self.X_test, self.y_test), 4)
 
     def predict(self, img_feature):
-        return self.svc.predict(img_feature)
+        scaled_features = self.X_scaler.transform(np.array(img_feature).reshape(1, -1))
+        return self.svc.predict(scaled_features)
 
 
