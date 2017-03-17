@@ -88,12 +88,12 @@ I got a test accuracy of 0.9879 for these parameters.
 My sliding window search is implemented in the two files `./scripts/sliding_window.py` and `./scripts/vehicle_searcher.py`. VehicleSearcher class receives a list of SlidingWindow objects. SlidingWindow objects slides a window from start to stop and returns the set of windows where it detects the cars. VehicleSearcher slides through all the sliding window configurations and accumulates all the windows together. Then it creates a heatmap and the final car positions are calculated on the thresholded heatmaps.
 
 I decided to use the following six configurations for the sliding windows:
-        * slider1 = x_start_stop=[550,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5)
-        * slider2 = x_start_stop=[480,1200], y_start_stop=[400, 470], xy_window=[48,48], xy_step=(5, 5)
-        * slider3 = x_start_stop=[450,None], y_start_stop=[420, 500], xy_window=[64,64], xy_step=(5, 5)
-        * slider4 = x_start_stop=[400,None], y_start_stop=[400, 530], xy_window=[96,96], xy_step=(5, 5)
-        * slider5 = x_start_stop=[350,None], y_start_stop=[430, 560], xy_window=[128,128], xy_step=(5, 5)
-        * slider6 = x_start_stop=[350,None], y_start_stop=[500, 690], xy_window=[192,192], xy_step=(5, 5)
+      * slider1 = x_start_stop=[550,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5)
+      * slider2 = x_start_stop=[480,1200], y_start_stop=[400, 470], xy_window=[48,48], xy_step=(5, 5)
+      * slider3 = x_start_stop=[450,None], y_start_stop=[420, 500], xy_window=[64,64], xy_step=(5, 5)
+      * slider4 = x_start_stop=[400,None], y_start_stop=[400, 530], xy_window=[96,96], xy_step=(5, 5)
+      * slider5 = x_start_stop=[350,None], y_start_stop=[430, 560], xy_window=[128,128], xy_step=(5, 5)
+      * slider6 = x_start_stop=[350,None], y_start_stop=[500, 690], xy_window=[192,192], xy_step=(5, 5)
 
 ![alt text][image3]
 
