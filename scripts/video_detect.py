@@ -13,10 +13,10 @@ class VideoCarDetection:
 
         slider0 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[350, 450], xy_window=[20,20])
         slider1 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 500], xy_window=[32,32])
-        slider2 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 525], xy_window=[48,48], xy_overlap=(0.25, 0.25))
-        slider3 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 550], xy_window=[64,64], xy_overlap=(0.25, 0.25))
-        slider4 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 600], xy_window=[96,96], xy_overlap=(0.25, 0.25))
-        slider5 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 660], xy_window=[128,128], xy_overlap=(0.25, 0.25))
+        slider2 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 525], xy_window=[48,48], xy_step=(5, 5))
+        slider3 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 550], xy_window=[64,64], xy_step=(5, 5))
+        slider4 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 600], xy_window=[96,96], xy_step=(5, 5))
+        slider5 = SlidingWindow(featurizer, classifier, x_start_stop=[None,None], y_start_stop=[400, 660], xy_window=[128,128], xy_step=(5, 5))
 
         self.searcher=VehicleSearcher([slider1, slider2, slider3, slider4, slider5])
 
@@ -29,7 +29,7 @@ class VideoCarDetection:
     def detect(self, img):
         bboxes = self.searcher.detect_boxes(img)
         self.add_bboxes(bboxes)
-        threshold = 2
+        threshold = 8
         heatmap, draw_img = self.searcher.annotate_image(img, self.prev_bboxes, threshold)
 
         return draw_img
