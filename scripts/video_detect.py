@@ -9,6 +9,8 @@ class VideoCarDetection:
 
         self.featurizer = featurizer
         self.classifier = classifier
+        self.window_size = 5
+        self.previous_bboxes = []
 
         slider0 = SlidingWindow(featurizer, classifier, x_start_stop=[550,900], y_start_stop=[350, 450], xy_window=[20,20])
         slider1 = SlidingWindow(featurizer, classifier, x_start_stop=[550,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5))
@@ -20,15 +22,24 @@ class VideoCarDetection:
 
         self.searcher=VehicleSearcher([slider1, slider2, slider3, slider4, slider5])
 
+    def get_merged_bboxes(self):
+        merged = []
+        for bboxes in self.previous_bboxes:
+            merged.extend(bboxes)
+        return merged
+
     def add_bboxes(self, bboxes):
-        self.prev_bboxes.extend(bboxes)
-        if len(self.prev_bboxes) > 15:
+        self.previous_bboxes.append(bboxes)
+        if len(self.previous_bboxes) > self.window_size:
             # throw out oldest rectangle set(s)
-            self.prev_bboxes = self.prev_bboxes[len(self.prev_bboxes)-15:]
+            _ = self.previous_bboxes.pop(0)
+        return self.get_merged_bboxes()
 
     def detect(self, img):
-        newboxes, heatmap, draw_img = self.searcher.detect(img)
+        newboxes = self.searcher.detect_bboxes(img)
+        merged = self.add_bboxes(newboxes)
 
+        carboxes, heatmap, draw_img = self.searcher.annotate_image(img, merged, self.searcher.threshold+5)
         return draw_img
 
     def annotate_video(self):

@@ -64,3 +64,11 @@ class VehicleSearcher():
         labels = label(heatmap)
         carboxes, draw_img = self.draw_labeled_bboxes(np.copy(img), labels)
         return carboxes, heatmap, draw_img
+
+    def detect_bboxes(self, img):
+        bboxes = []
+        for slider in self.sliders:
+            windows = slider.detect(img)
+            bboxes.extend(windows)
+
+        return bboxes
