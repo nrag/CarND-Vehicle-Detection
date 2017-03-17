@@ -10,9 +10,11 @@ from image_features import ImageFeatures
 from vehicle_classifier import VehicleClassifier
 
 def get_best_parameters():
-    if os.path.isfile('./best_param.p'):
-        f = open('best_param.p', 'rb')
-        return pickle.load(f)
+    if os.path.isfile('./best_params.p'):
+        f = open('best_params.p', 'rb')
+        return pickle.load(f), None, 1
+    else:
+        print('File not found')
 
     car_images = glob.glob('../vehicles/**/*.png')
     noncar_images = glob.glob('../non-vehicles/**/*.png')
@@ -54,13 +56,17 @@ def get_best_parameters():
                                 best_params['hog_orient'] = hog_orient
                                 best_params['hog_pix_per_cell'] = hog_pix_per_cell
                                 best_params['hog_cell_per_block'] = hog_cell_per_block
-                            
+                                
+                                f = open('best_params.p', 'wb')
+                                pickle.dump(best_params, f)
+                                f.close()
+
                             pbar.update(1)
 
-    print('Best accuracy = ', best_accuracy)
-    f = open('best_params.p', 'wb')
-    pickle.dump(best_params, f)
-    return best_params
+    return best_params, best_classifier, best_score
 
-best_params = get_best_parameters()
-print("Best parameters are: Color Space =  %s, bin_size = %s, hist_bins = %d, hist_bin_range = (0, %d), hog_orient = %d, hog_pix_per_cell = %d, hog_pix_per_block = %d" % (best_params['cspace'], best_params['bin_size'], best_params['hist_bins'], best_params['hist_bin_range'], best_params['hog_orient'], best_params['hog_pix_per_cell'], best_params['hog_cell_per_block']))
+if __name__ == "__main__":
+    best_params, best_classifier, best_score = get_best_parameters()
+    f = open('best_data.p', 'wb')
+    pickle.dump((best_classifier.X_train, best_classifier.X_test, best_classifier.y_train, best_classifier.y_test), f)
+    print("Best parameters are: Color Space =  %s, bin_size = %s, hist_bins = %d, hist_bin_range = (0, %d), hog_orient = %d, hog_pix_per_cell = %d, hog_pix_per_block = %d" % (best_params['cspace'], best_params['bin_size'], best_params['hist_bins'], best_params['hist_bin_range'], best_params['hog_orient'], best_params['hog_pix_per_cell'], best_params['hog_cell_per_block']))

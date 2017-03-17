@@ -66,13 +66,13 @@ class ImageFeatures:
         # Call with two outputs if vis==True
         if vis == True:
             features, hog_image = hog(gray, orientations=self.hog_orient, pixels_per_cell=(self.hog_pix_per_cell, self.hog_pix_per_cell),
-                                      cells_per_block=(self.hog_cell_per_block, self.hog_cell_per_block), transform_sqrt=True, 
+                                      cells_per_block=(self.hog_cell_per_block, self.hog_cell_per_block),
                                       visualise=vis, feature_vector=True)
             return features, hog_image
         # Otherwise call with one output
         else:      
             features = hog(gray, orientations=self.hog_orient, pixels_per_cell=(self.hog_pix_per_cell, self.hog_pix_per_cell),
-                           cells_per_block=(self.hog_cell_per_block, self.hog_cell_per_block), transform_sqrt=True, 
+                           cells_per_block=(self.hog_cell_per_block, self.hog_cell_per_block),
                            visualise=vis, feature_vector=True)
             return features
 

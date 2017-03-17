@@ -11,7 +11,7 @@ class VehicleClassifier:
         X = np.vstack((car_features, noncar_features)).astype(np.float64)                        
         # Fit a per-column scaler
         self.X_scaler = StandardScaler(copy=False).fit(X)
-        self.scaled_X = X_scaler.transform(X)
+        self.scaled_X = self.X_scaler.transform(X)
         self.y = np.hstack((np.ones(len(car_features)), np.zeros(len(noncar_features))))
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.scaled_X, self.y, test_size=0.2, random_state=rand_state)
         self.svc = LinearSVC()

@@ -1,17 +1,17 @@
 import numpy as np
+import cv2
 
-from sliding_window import SlidingWindow
 from scipy.ndimage.measurements import label
+from sliding_window import SlidingWindow
 
-class VehicleSearcher(classifier):
+class VehicleSearcher():
     def __init__(self, sliders):
         self.sliders = sliders
-        self.bboxes = []
-        self.threshold = 3
+        self.threshold = 4
 
-    def add_heat(self, heatmap):
+    def add_heat(self, bboxes, heatmap):
         # Iterate through list of bboxes
-        for box in self.bboxes:
+        for box in bboxes:
             # Add += 1 for all pixels inside each bbox
             # Assuming each "box" takes the form ((x1, y1), (x2, y2))
             heatmap[box[0][1]:box[1][1], box[0][0]:box[1][0]] += 1
@@ -19,9 +19,9 @@ class VehicleSearcher(classifier):
         # Return updated heatmap
         return heatmap# Iterate through list of bboxes
         
-    def apply_threshold(self, heatmap):
+    def apply_threshold(self, heatmap, threshold):
         # Zero out pixels below the threshold
-        heatmap[heatmap <= self.threshold] = 0
+        heatmap[heatmap <= threshold] = 0
         # Return thresholded map
         return heatmap
 
@@ -40,16 +40,27 @@ class VehicleSearcher(classifier):
         # Return the image
         return img
 
-    def detect(self, img):
-        for slider in sliders:
-            windows = slider.detect(img)
-            self.bboxes = np.concatenate((bboxes, windows))
-
+    def annotate_image(self, img, bboxes, threshold):
         heat = np.zeros_like(img[:,:,0]).astype(np.float)
-        heat = self.add_heat(heat)
-        heat = apply_threshold(heat)
+        heat = self.add_heat(bboxes, heat)
+        heat = self.apply_threshold(heat, threshold)
         heatmap = np.clip(heat, 0, 255)
         labels = label(heatmap)
-        draw_img = draw_labeled_bboxes(np.copy(image), labels)
-
+        draw_img = self.draw_labeled_bboxes(np.copy(img), labels)
         return heatmap, draw_img
+
+    def detect(self, img):
+        bboxes = []
+        for slider in self.sliders:
+            windows = slider.detect(img)
+            bboxes.extend(windows)
+
+        return self.annotate_image(img, bboxes, self.threshold)
+
+    def detect_boxes(self, img):
+        bboxes = []
+        for slider in self.sliders:
+            windows = slider.detect(img)
+            bboxes.extend(windows)
+
+        return bboxes
