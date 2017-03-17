@@ -55,6 +55,7 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 ####2. Explain how you settled on your final choice of HOG parameters.
 
 I did an exhaustive search across all the parameters (see `scripts/feature_search.py` lines 29-63). I iterated through all the parameters training a Linear SVM for each parameter combination and choosing the parameter combination with the best accuracy. I found that the following parameter produced the best accuracy on the test set:
+      
       * Color Space =  LUV      
       * Spatial bin size = (32, 32)   
       * Histogram bins = 32
@@ -88,12 +89,13 @@ I got a test accuracy of 0.9879 for these parameters.
 My sliding window search is implemented in the two files `./scripts/sliding_window.py` and `./scripts/vehicle_searcher.py`. VehicleSearcher class receives a list of SlidingWindow objects. SlidingWindow objects slides a window from start to stop and returns the set of windows where it detects the cars. VehicleSearcher slides through all the sliding window configurations and accumulates all the windows together. Then it creates a heatmap and the final car positions are calculated on the thresholded heatmaps.
 
 I decided to use the following six configurations for the sliding windows:
-      * slider1 = x_start_stop=[550,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5)
-      * slider2 = x_start_stop=[480,1200], y_start_stop=[400, 470], xy_window=[48,48], xy_step=(5, 5)
-      * slider3 = x_start_stop=[450,None], y_start_stop=[420, 500], xy_window=[64,64], xy_step=(5, 5)
-      * slider4 = x_start_stop=[400,None], y_start_stop=[400, 530], xy_window=[96,96], xy_step=(5, 5)
-      * slider5 = x_start_stop=[350,None], y_start_stop=[430, 560], xy_window=[128,128], xy_step=(5, 5)
-      * slider6 = x_start_stop=[350,None], y_start_stop=[500, 690], xy_window=[192,192], xy_step=(5, 5)
+      
+      * Slider1 = x_start_stop=[550,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5)
+      * Slider2 = x_start_stop=[480,1200], y_start_stop=[400, 470], xy_window=[48,48], xy_step=(5, 5)
+      * Slider3 = x_start_stop=[450,None], y_start_stop=[420, 500], xy_window=[64,64], xy_step=(5, 5)
+      * Slider4 = x_start_stop=[400,None], y_start_stop=[400, 530], xy_window=[96,96], xy_step=(5, 5)
+      * Slider5 = x_start_stop=[350,None], y_start_stop=[430, 560], xy_window=[128,128], xy_step=(5, 5)
+      * Slider6 = x_start_stop=[350,None], y_start_stop=[500, 690], xy_window=[192,192], xy_step=(5, 5)
 
 ![alt text][image3]
 
