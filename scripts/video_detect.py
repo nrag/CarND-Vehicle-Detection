@@ -39,7 +39,9 @@ class VideoCarDetection:
         newboxes = self.searcher.detect_bboxes(img)
         merged = self.add_bboxes(newboxes)
 
-        carboxes, heatmap, draw_img = self.searcher.annotate_image(img, merged, self.searcher.threshold+5)
+        threshold = self.searcher.threshold + 15
+        carboxes, heatmap, draw_img = self.searcher.annotate_image(img, merged, threshold)
+    
         return draw_img
 
     def annotate_video(self):
