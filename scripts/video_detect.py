@@ -54,6 +54,7 @@ class VideoCarDetection:
                 cv2.rectangle(frame_img, bbox[0], bbox[1], (0,0,255), 6)
             mpimg.imsave(self.output_file.split('.mp4')[0] + '_frame_' + str(self.frame_count) + '.png', frame_img)
             mpimg.imsave(self.output_file.split('.mp4')[0] + '_heatmap_' + str(self.frame_count) + '.png', np.dstack((heatmap, heatmap, heatmap)))
+            mpimg.imsave(self.output_file.split('.mp4')[0] + '_final_' + str(self.frame_count) + '.png', draw_img)
         return draw_img
 
     def annotate_video(self):

@@ -23,7 +23,7 @@ class VehicleClassifier:
     def predict(self, img_feature):
         scaled_features = self.X_scaler.transform(np.array(img_feature).reshape(1, -1))
         dist = self.svc.decision_function(scaled_features)
-        if dist > 1.8:
+        if dist > 1.5:
             return True
         return False
 
