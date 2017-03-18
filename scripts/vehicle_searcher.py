@@ -7,7 +7,7 @@ from sliding_window import SlidingWindow
 class VehicleSearcher():
     def __init__(self, sliders):
         self.sliders = sliders
-        self.threshold = 20
+        self.threshold = 1
 
     def add_heat(self, bboxes, heatmap):
         # Iterate through list of bboxes

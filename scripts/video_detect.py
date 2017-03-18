@@ -13,8 +13,8 @@ class VideoCarDetection:
         self.previous_bboxes = []
 
         slider0 = SlidingWindow(featurizer, classifier, x_start_stop=[550,900], y_start_stop=[350, 450], xy_window=[20,20])
-        slider1 = SlidingWindow(featurizer, classifier, x_start_stop=[550,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5))
-        slider2 = SlidingWindow(featurizer, classifier, x_start_stop=[480,1200], y_start_stop=[400, 470], xy_window=[48,48], xy_step=(5, 5))
+        slider1 = SlidingWindow(featurizer, classifier, x_start_stop=[600,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5))
+        slider2 = SlidingWindow(featurizer, classifier, x_start_stop=[520,1200], y_start_stop=[400, 470], xy_window=[48,48], xy_step=(5, 5))
         slider3 = SlidingWindow(featurizer, classifier, x_start_stop=[450,None], y_start_stop=[420, 500], xy_window=[64,64], xy_step=(5, 5))
         slider4 = SlidingWindow(featurizer, classifier, x_start_stop=[400,None], y_start_stop=[400, 530], xy_window=[96,96], xy_step=(5, 5))
         slider5 = SlidingWindow(featurizer, classifier, x_start_stop=[350,None], y_start_stop=[430, 560], xy_window=[128,128], xy_step=(5, 5))
@@ -39,7 +39,7 @@ class VideoCarDetection:
         newboxes = self.searcher.detect_bboxes(img)
         merged = self.add_bboxes(newboxes)
 
-        threshold = self.searcher.threshold + 15
+        threshold = self.searcher.threshold + 1
         carboxes, heatmap, draw_img = self.searcher.annotate_image(img, merged, threshold)
     
         return draw_img
