@@ -22,7 +22,7 @@ The goals / steps of this project are the following:
 [image4]: ./examples/sliding_window.jpg
 [image5]: ./examples/bboxes_and_heat1.png
 [image6]: ./frame_images/test_video_out_heatmap_5.png
-[image7]: ./frame_images/test_video_out_frame_39.png
+[image7]: ./frame_images/test_video_out_final_39.png
 [image8]: ./examples/test_images_result.png
 [video1]: ./project_video_out.mp4
 
