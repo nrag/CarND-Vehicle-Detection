@@ -1,16 +1,22 @@
+import cv2
+import matplotlib.image as mpimg
+import numpy as np
+
 from moviepy.editor import VideoFileClip
 from vehicle_searcher import VehicleSearcher
 from sliding_window import SlidingWindow
 
 class VideoCarDetection:
-    def __init__(self, classifier, featurizer, video_file, output_file):
+    def __init__(self, classifier, featurizer, video_file, output_file, save_frames=False):
         self.video_file = video_file
         self.output_file = output_file
 
+        self.save_frames = save_frames
         self.featurizer = featurizer
         self.classifier = classifier
         self.window_size = 5
         self.previous_bboxes = []
+        self.frame_count = 0
 
         slider0 = SlidingWindow(featurizer, classifier, x_start_stop=[550,900], y_start_stop=[350, 450], xy_window=[20,20])
         slider1 = SlidingWindow(featurizer, classifier, x_start_stop=[600,900], y_start_stop=[370, 430], xy_window=[32,32], xy_step=(5, 5))
@@ -41,11 +47,18 @@ class VideoCarDetection:
 
         threshold = self.searcher.threshold + 1
         carboxes, heatmap, draw_img = self.searcher.annotate_image(img, merged, threshold)
-    
+        if (self.save_frames):
+            self.frame_count += 1
+            frame_img = np.copy(img)
+            for bbox in newboxes:
+                cv2.rectangle(frame_img, bbox[0], bbox[1], (0,0,255), 6)
+            mpimg.imsave(self.output_file.split('.mp4')[0] + '_frame_' + str(self.frame_count) + '.png', frame_img)
+            mpimg.imsave(self.output_file.split('.mp4')[0] + '_heatmap_' + str(self.frame_count) + '.png', np.dstack((heatmap, heatmap, heatmap)))
         return draw_img
 
     def annotate_video(self):
         """ Given input_file video, save annotated video to output_file """
+        self.frame_count = 0
         video = VideoFileClip(self.video_file)
         annotated_video = video.fl_image(self.detect)
         annotated_video.write_videofile(self.output_file, audio=False)

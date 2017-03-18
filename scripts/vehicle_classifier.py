@@ -6,7 +6,6 @@ from sklearn.preprocessing import StandardScaler
 
 class VehicleClassifier:
     def __init__(self, car_features, noncar_features):
-        self.threshold = 1
         rand_state = np.random.randint(0, 100)
         # Create an array stack of feature vectors
         X = np.vstack((car_features, noncar_features)).astype(np.float64)                        
@@ -24,7 +23,7 @@ class VehicleClassifier:
     def predict(self, img_feature):
         scaled_features = self.X_scaler.transform(np.array(img_feature).reshape(1, -1))
         dist = self.svc.decision_function(scaled_features)
-        if dist > 1.7:
+        if dist > 1.8:
             return True
         return False
 
